@@ -33,6 +33,24 @@ app.get('/', (req, res) => {
   res.send('api working')
 })
 
+/* ping to kepp server awake */
+const pingServer = () => {
+  const url = process.env.BACKEND_URL || 'http://localhost:4000'
+  setInterval(async () => {
+    try {
+      await fetch(url + '/ping')
+      console.log('Server pinged successfully')
+    } catch (error) {
+      console.log('Ping failed:', error.message)
+    }
+  }, 10 * 60 * 1000) 
+}
+
+pingServer()
+
+app.get('/ping', (req, res) => {
+  res.json({ success: true, message: 'pong' })
+})
 app.listen(port, () => {
   console.log(`server running on port ${port}`)
 })
