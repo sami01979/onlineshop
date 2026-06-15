@@ -8,7 +8,7 @@ const orderRouter = express.Router();
 orderRouter.post('/list',adminAuth,allOrders)
 orderRouter.post('/status',adminAuth,updateStatus)
 
-orderRouter.post('/place',authUser,placeOrder)
+orderRouter.post('/place',placeOrder)
 orderRouter.post('/userorders',authUser,userOrder)
 
 export default orderRouter;

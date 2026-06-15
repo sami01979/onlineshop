@@ -46,14 +46,14 @@ const Product = () => {
         {/* Product Info */}
         <div className='flex-1'>
           <h1 className='font-medium text-2xl mt-2'>{productData.name}</h1>
-          <div className='flex items-center gap-1 mt-2'>
+          {/* <div className='flex items-center gap-1 mt-2'>
             <img src={assets.star_icon} alt="" className="w-3 5" />
             <img src={assets.star_icon} alt="" className="w-3 5" />
             <img src={assets.star_icon} alt="" className="w-3 5" />
             <img src={assets.star_icon} alt="" className="w-3 5" />
             <img src={assets.star_dull_icon} alt="" className="w-3 5" />
             <p className='pl-2'>(163)</p>
-          </div>
+          </div> */}
           <div className='flex gap-3'>
             <p className='mt-5 text-3xl font-medium'>{currency}{productData.price}</p>
             <p className='mt-5 line-through text-red-500 text-2xl font-medium'>{currency}{productData.mprice}</p>
@@ -78,7 +78,7 @@ const Product = () => {
 
           <button
             onClick={() => { addToCart(productData._id, quantity); toast.success('Item added to cart!', { autoClose: 1000 }); window.scrollTo({ top: 0, behavior: 'smooth' }) }}
-            className='bg-black text-white px-8 py-3 text-sm active:bg-gray-700'
+            className='bg-blue-950 text-white px-8 py-3 text-sm active:bg-gray-700'
           >ADD TO CART</button>
 
           <hr className='mt-8 sm:w-4/5' />

@@ -101,7 +101,7 @@ const ProductItem = ({ id, image, name, price, mprice }) => {
             </button>
           </div>
         ) : (
-          // Collapsed: just quantity bubble, tap to expand
+          /* circle button */
           <button
             onClick={(e) => {
               e.preventDefault()
@@ -116,7 +116,7 @@ const ProductItem = ({ id, image, name, price, mprice }) => {
       </div>
 
       {/* Name */}
-      <p className='pt-2 text-xs leading-tight line-clamp-2 min-h-10'>{name}</p>
+      <p className='pt-2 text-sm leading-tight line-clamp-2 min-h-10'>{name}</p>
 
       {/* Price */}
       <div className='flex items-center gap-1.5 mt-1'>
