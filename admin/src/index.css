@@ -1,8 +1,9 @@
 @import url('https://fonts.googleapis.com/css2?family=Short+Stack&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap');
 @import "tailwindcss";
 
 *{
-    font-family: Short Stack;
+    font-family: Open Sans;
 }
 select,input,textarea{
     border: 1px solid #c2c2c2;
