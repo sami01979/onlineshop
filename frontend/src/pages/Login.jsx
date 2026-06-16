@@ -2,7 +2,6 @@ import React, { useContext, useEffect, useState } from 'react'
 import { ShopContext } from '../context/ShopContext'
 import axios from 'axios'
 import { toast } from 'react-toastify'
-import { useNavigate } from 'react-router-dom'
 
 const Login = () => {
   const [currentState, setCurrentState] = useState('Login')
@@ -11,7 +10,7 @@ const Login = () => {
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
-  const navigate = useNavigate()
+
   const onSubmitHandler = async (event) => {
     event.preventDefault()
     try {
@@ -37,6 +36,7 @@ const Login = () => {
       toast.error(error.message)
     }
   }
+
   useEffect(() => {
     if (token) {
       navigate("/")
@@ -44,27 +44,76 @@ const Login = () => {
   }, [token])
 
   return (
-    <form onSubmit={onSubmitHandler} className=' flex flex-col items-center w-[90%] sm:max-w-96 mt-14 m-auto gap-4 text-gray-800 '>
-      <div className=' inline-flex items-center gap-2 mb-2 mt-10 '>
-        <p className='prata-regular text-3xl '>{currentState}</p>
+    <form onSubmit={onSubmitHandler} className='flex flex-col items-center w-[90%] sm:max-w-96 mt-14 m-auto gap-4 text-gray-800'>
+      <div className='inline-flex items-center gap-2 mb-2 mt-10'>
+        <p className='prata-regular text-3xl'>{currentState}</p>
         <hr className='border-none h-[1.5px] w-8 bg-gray-800' />
       </div>
-      {currentState === 'Login' ? ' ' : <input onChange={(e) => setName(e.target.value)} value={name} type="text" className='w-full px-3 py-2 border border-gray-800 ' placeholder='Name' required />}
-      <input onChange={(e) => setEmail(e.target.value)} value={email} type="email" className='w-full px-3 py-2 border border-gray-800 ' placeholder='Email' required />
-      <input onChange={(e) => setPassword(e.target.value)} value={password} type="password" className='w-full px-3 py-2 border border-gray-800 ' placeholder='Password' required />
-      <div className='w-full flex justify-between text-sm -mt-2'>
-        {currentState === 'Login'
-          ? <p onClick={() => navigate('/forgot-password')} className='text-red-500 cursor-pointer hover:underline'>
-  Forgot your password?
-</p>
-          : <span />
-        }
-        {currentState === 'Login'
-          ? <p onClick={() => setCurrentState('Sign Up')} className='cursor-pointer font-semibold text-black border-b border-black hover:opacity-70'>Create Account</p>
-          : <p onClick={() => setCurrentState('Login')} className='cursor-pointer font-semibold text-black border-b border-black hover:opacity-70'>Login Here</p>
-        }
+
+      {currentState !== 'Login' && (
+        <input
+          onChange={(e) => setName(e.target.value)}
+          value={name}
+          type="text"
+          className='w-full px-3 py-2 border border-gray-800'
+          placeholder='Name'
+          required
+        />
+      )}
+
+      <input
+        onChange={(e) => setEmail(e.target.value)}
+        value={email}
+        type="email"
+        className='w-full px-3 py-2 border border-gray-800'
+        placeholder='Email'
+        required
+      />
+      <input
+        onChange={(e) => setPassword(e.target.value)}
+        value={password}
+        type="password"
+        className='w-full px-3 py-2 border border-gray-800'
+        placeholder='Password'
+        required
+      />
+
+      {/* Forgot password */}
+      {currentState === 'Login' && (
+        <div className='w-full text-right -mt-2'>
+          <p
+            onClick={() => navigate('/forgot-password')}
+            className='text-red-500 text-sm cursor-pointer hover:underline inline-block'
+          >
+            Forgot your password?
+          </p>
+        </div>
+      )}
+
+      <button className='bg-black text-white font-light px-8 py-2 w-full mt-2'>
+        {currentState === 'Login' ? 'Sign In' : 'Sign Up'}
+      </button>
+
+      {/* Create Account / Login Here */}
+      <div className='w-full mt-1'>
+        {currentState === 'Login' ? (
+          <button
+            type='button'
+            onClick={() => setCurrentState('Sign Up')}
+            className='w-full border-2 border-black text-black font-semibold py-2 hover:bg-black hover:text-white transition-colors duration-200'
+          >
+            Create Account
+          </button>
+        ) : (
+          <button
+            type='button'
+            onClick={() => setCurrentState('Login')}
+            className='w-full border-2 border-black text-black font-semibold py-2 hover:bg-black hover:text-white transition-colors duration-200'
+          >
+            Login Here
+          </button>
+        )}
       </div>
-      <button className='bg-black text-white font-light px-8 py-2 mt-4'>{currentState === 'Login' ? 'Sign In' : 'Sign Up'}</button>
     </form>
   )
 }
