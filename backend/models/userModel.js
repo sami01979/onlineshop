@@ -12,7 +12,9 @@ const userSchema = new mongoose.Schema({
         areaName: { type: String, default: '' },
         buildingName: { type: String, default: '' },
         roadName: { type: String, default: '' }
-    }
+    },
+    resetToken: { type: String, default: null },          // ← add
+    resetTokenExpiry: { type: Number, default: null } 
 },{minimize:false})
 
 const userModel = mongoose.models.user || mongoose.model('user', userSchema);

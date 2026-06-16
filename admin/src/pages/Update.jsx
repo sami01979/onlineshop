@@ -19,8 +19,8 @@ const Update = ({ token }) => {
     const [description, setDescription] = useState("")
     const [price, setPrice] = useState("")
     const [mprice, setMprice] = useState("")
-    const [category, setCategory] = useState("Men")
-    const [subCategory, setSubCategory] = useState("Topwear")
+    const [category, setCategory] = useState("none")
+    const [subCategory, setSubCategory] = useState("none")
     const [bestseller, setBestseller] = useState(false)
     const [existingImages, setExistingImages] = useState([])
 
@@ -146,6 +146,7 @@ const Update = ({ token }) => {
                     <div>
                         <p className='mb-2'>Product Category</p>
                         <select onChange={(e) => setCategory(e.target.value)} value={category} className='w-full px-3 py-2'>
+                            <option value="None">None</option>  
                             <option value="Cooking">Cooking</option>
                             <option value="Snacks">Snacks</option>
                             <option value="Spices">Spices</option>

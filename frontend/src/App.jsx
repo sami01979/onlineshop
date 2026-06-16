@@ -17,6 +17,8 @@ import 'react-toastify/dist/ReactToastify.css'
 import { ShopContext } from './context/ShopContext'
 import UserOrderDetail from './pages/UserOrderDetail'
 import Profile from './pages/Profile'
+import ForgotPassword from './pages/ForgotPassword'
+import ResetPassword from './pages/ResetPassword'
 
 const App = () => {
   const { getCartCount } = useContext(ShopContext)
@@ -26,13 +28,13 @@ const App = () => {
   const hideBar = location.pathname === '/place-order' || location.pathname === '/login'
 
   return (
-   <div className='px-4 sm:px-[5vw] md:px-[7vw] lg:px-[9vw] pb-16 sm:pb-0'>
+    <div className='px-4 sm:px-[5vw] md:px-[7vw] lg:px-[9vw] pb-16 sm:pb-0'>
       <ToastContainer />
       <Navbar />
       <SearchBar />
       <Routes>
         <Route path="/" element={<Home />} />
-       {/*  <Route path="/about" element={<About />} /> */}
+
         <Route path="/cart" element={<Cart />} />
         <Route path="/login" element={<Login />} />
         <Route path="/orders" element={<Orders />} />
@@ -42,6 +44,8 @@ const App = () => {
         <Route path="/contact" element={<Contact />} />
         <Route path="/profile" element={<Profile />} />
         <Route path="/order-detail/:id" element={<UserOrderDetail />} />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
+        <Route path="/reset-password" element={<ResetPassword />} />
       </Routes>
       <Footer />
 
@@ -64,11 +68,11 @@ const App = () => {
 
             {/* Place Order Button */}
             <button
-  onClick={() => navigate('/cart')}
-  className='text-sm font-bold tracking-wide bg-white text-blue-950 px-5 py-1.5 rounded-full'
->
-  View Cart →
-</button>
+              onClick={() => navigate('/cart')}
+              className='text-sm font-bold tracking-wide bg-white text-blue-950 px-5 py-1.5 rounded-full'
+            >
+              View Cart →
+            </button>
           </div>
         </div>
       )}

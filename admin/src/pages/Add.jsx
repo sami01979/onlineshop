@@ -15,7 +15,7 @@ const Add = ({token}) => {
     const [description,setDescription]=useState("")
     const [price, setPrice] = useState("")
     const [mprice,setMprice]=useState("")
-    const [category, setCategory] = useState("Cooking")
+    const [category, setCategory] = useState("None") 
     const [subCategory,setSubCategory] = useState("")
     const [bestseller,setBestseller] = useState(false)
 
@@ -92,6 +92,7 @@ const Add = ({token}) => {
         <div>
             <p className='mb-2'>Product Category</p>
             <select onChange={(e)=>setCategory(e.target.value)} className='w-full px-3 py-2'>
+                <option value="None">None</option>  
                             <option value="Cooking">Cooking</option>
                             <option value="Snacks">Snacks</option>
                             <option value="Spices">Spices</option>
