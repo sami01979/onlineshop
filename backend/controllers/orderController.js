@@ -1,6 +1,6 @@
 import orderModel from "../models/orderModel.js"
 import userModel from "../models/userModel.js"
-
+import { sendOrderNotification } from '../routes/notificationRoute.js';
 /* placing order using cash on delivery */
 const placeOrder = async (req, res) => {
     try {
@@ -17,7 +17,8 @@ const placeOrder = async (req, res) => {
 
         const newOrder = new orderModel(orderData)
         await newOrder.save()
-
+        const savedOrder = await order.save();
+        await sendOrderNotification(savedOrder);
         // only clear cart if user is logged in
         if (userId) {
             await userModel.findByIdAndUpdate(userId, { cartData: {} })
@@ -29,34 +30,34 @@ const placeOrder = async (req, res) => {
         res.json({ success: false, message: error.message })
     }
 }
-const allOrders = async(req,res) =>{
-        try {
-            const orders = await orderModel.find({})
-            res.json({success:true,orders})
-        } catch (error) {
-            console.log(error)   
-         res.json({success:false,message:error.message})
-        }
+const allOrders = async (req, res) => {
+    try {
+        const orders = await orderModel.find({})
+        res.json({ success: true, orders })
+    } catch (error) {
+        console.log(error)
+        res.json({ success: false, message: error.message })
+    }
 }
-const userOrder = async(req,res) =>{
-        try {
-            const {userId} = req.body;
-            const orders = await orderModel.find({userId})
-            res.json({success:true,orders})
-        } catch (error) {
-         console.log(error)   
-         res.json({success:false,message:error.message})
-        }
+const userOrder = async (req, res) => {
+    try {
+        const { userId } = req.body;
+        const orders = await orderModel.find({ userId })
+        res.json({ success: true, orders })
+    } catch (error) {
+        console.log(error)
+        res.json({ success: false, message: error.message })
+    }
 }
 const updateStatus = async (req, res) => {
-  try {
-    const { orderId, status } = req.body
-    await orderModel.findByIdAndUpdate(orderId, { status })
-    res.json({ success: true, message: 'Status updated' })
-  } catch (error) {
-    console.log(error)
-    res.json({ success: false, message: error.message })
-  }
+    try {
+        const { orderId, status } = req.body
+        await orderModel.findByIdAndUpdate(orderId, { status })
+        res.json({ success: true, message: 'Status updated' })
+    } catch (error) {
+        console.log(error)
+        res.json({ success: false, message: error.message })
+    }
 }
 
-export {placeOrder, allOrders , userOrder, updateStatus}
+export { placeOrder, allOrders, userOrder, updateStatus }

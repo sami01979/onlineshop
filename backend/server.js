@@ -9,6 +9,7 @@ import productRouter from './routes/productRoute.js'
 import { setDefaultResultOrder } from 'dns'
 import cartRouter from './routes/cartRoutes.js'
 import orderRouter from './routes/orderRoute.js'
+import notificationRouter from './routes/notificationRoute.js';
 
 // app config
 setDefaultResultOrder('ipv4first')
@@ -27,7 +28,7 @@ app.use('/api/user', userRouter)
 app.use('/api/product', productRouter)
 app.use('/api/cart',cartRouter)
 app.use('/api/order',orderRouter)
-
+app.use('/api/notification', notificationRouter);
 
 app.get('/', (req, res) => {
   res.send('api working')
