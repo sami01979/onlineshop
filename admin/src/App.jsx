@@ -23,8 +23,6 @@ const AppContent = ({ token, setToken }) => {
   }, [location.pathname])
 
   const subscribeAdminToPush = async () => {
-     console.log('Backend URL:', import.meta.env.VITE_BACKEND_URL); // add here
-     console.log('VAPID Key:', import.meta.env.VITE_VAPID_PUBLIC_KEY);
   if (!('serviceWorker' in navigator) || !('PushManager' in window)) {
     console.log('Push not supported');
     return;
