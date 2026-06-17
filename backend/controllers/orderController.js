@@ -17,8 +17,8 @@ const placeOrder = async (req, res) => {
 
         const newOrder = new orderModel(orderData)
         await newOrder.save()
-        const savedOrder = await order.save();
-        await sendOrderNotification(savedOrder);
+        await sendOrderNotification(newOrder); // ✅ fixed
+
         // only clear cart if user is logged in
         if (userId) {
             await userModel.findByIdAndUpdate(userId, { cartData: {} })
