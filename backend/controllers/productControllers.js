@@ -4,7 +4,7 @@ import productModel from '../models/productModel.js'
 // function for add product
 const addProduct = async (req, res) => {
     try {
-        const {name, description, price, mprice, category, subCategory, bestseller, tags} = req.body
+        const {name, description, price, mprice, category, subCategory, bestseller, tags, weight} = req.body
 
         const image1 = req.files.image1 && req.files.image1[0]
         const image2 = req.files.image2 && req.files.image2[0] 
@@ -34,10 +34,9 @@ const addProduct = async (req, res) => {
             bestseller: bestseller === 'true' ? true : false,
             image: imagesUrl,
             tags: parsedTags,
+            weight: weight || "",
             Date: Date.now()
         }
-
-       
 
         const product = new productModel(productData)
         await product.save()
@@ -57,7 +56,7 @@ const listProduct = async (req, res) => {
         const sevenDays = 7 * 24 * 60 * 60 * 1000
 
         const scored = products.map(p => {
-            try {                          // ADD THIS
+            try {
                 const obj = p.toObject()
                 const age = now - p.Date
                 const recencyBoost = age < sevenDays ? 15 : 0
@@ -66,7 +65,6 @@ const listProduct = async (req, res) => {
                 obj.score = (p.sells * 3) + (p.views * 1) + recencyBoost + bestsellerBoost + randomBoost
                 return obj
             } catch(err) {                 
-                
                 return p.toObject()
             }
         })
@@ -93,7 +91,7 @@ const removeProduct = async (req, res) => {
 // function for updating product
 const updateProduct = async (req, res) => {
     try {
-        const { id, name, description, price, mprice, category, subCategory, bestseller, tags } = req.body
+        const { id, name, description, price, mprice, category, subCategory, bestseller, tags, weight } = req.body
 
         const updateData = {}
 
@@ -107,6 +105,8 @@ const updateProduct = async (req, res) => {
         if (subCategory) updateData.subCategory = subCategory
         if (bestseller !== undefined)
                          updateData.bestseller  = bestseller === 'true' ? true : false
+
+        if (weight !== undefined) updateData.weight = weight
 
         // parse tags if provided
         if (tags !== undefined && tags !== '') {

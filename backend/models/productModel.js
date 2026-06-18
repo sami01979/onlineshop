@@ -11,7 +11,8 @@ const productSchema = new mongoose.Schema({
     bestseller:  { type: Boolean, default: false },
     sells:       { type: Number, default: 0 },
     views:       { type: Number, default: 0 },        // NEW
-    tags:        { type: Array, default: [] },         // NEW
+    tags:        { type: Array, default: [] },  
+    weight: { type: String, default: "" } ,       // NEW
     Date:        { type: Number, required: true }
 })
 
