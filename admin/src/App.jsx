@@ -66,7 +66,7 @@ useEffect(() => {
           <hr />
           <div className='flex w-full'>
             <Sidebar hidden={isOrderDetail} sidebarOpen={sidebarOpen} />
-            <div className={`${isOrderDetail ? 'w-full px-0' : 'w-[70%]'} mx-auto ml-[max(5vw,25px)] my-8 text-gray-600 text-base`}>
+           <div className={`${isOrderDetail ? 'w-full px-0' : 'flex-1'} px-4 my-8 text-gray-600 text-base overflow-hidden`}>
               <Routes>
                 <Route path='/' element={<Navigate to='/list' />} />
                 <Route path='/add' element={<Add token={token} />} />

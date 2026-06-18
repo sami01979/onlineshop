@@ -34,10 +34,9 @@ const Orders = ({ token }) => {
   }
 
   return (
-    <div className='p-3 sm:p-6 w-screen sm:w-full overflow-hidden'>
+    <div className='p-3 sm:p-6 w-full overflow-hidden'>
       <h2 className='text-lg sm:text-xl font-semibold text-gray-700 mb-4'>All Orders</h2>
-
-      <div className='flex flex-col gap-3'>
+      <div className='flex flex-col gap-3 max-w-2xl mx-auto w-full'>
         {orders.map((order, index) => {
           const { date, time } = formatDateTime(order.date)
           return (
@@ -65,13 +64,12 @@ const Orders = ({ token }) => {
 
               {/* Bottom row: status */}
               <div className='ml-7 mt-2'>
-                <span className={`text-xs font-medium px-2 py-0.5 rounded-full ${
-                  order.status === 'Delivered'
+                <span className={`text-xs font-medium px-2 py-0.5 rounded-full ${order.status === 'Delivered'
                     ? 'bg-green-100 text-green-700'
                     : order.status === 'out for delivery'
-                    ? 'bg-blue-100 text-blue-700'
-                    : 'bg-yellow-100 text-yellow-700'
-                }`}>
+                      ? 'bg-blue-100 text-blue-700'
+                      : 'bg-yellow-100 text-yellow-700'
+                  }`}>
                   {order.status}
                 </span>
               </div>

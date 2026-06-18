@@ -139,11 +139,10 @@ const OrderDetail = ({ token }) => {
           {statusSteps.map((step, i) => (
             <React.Fragment key={step}>
               <div className='flex flex-col items-center gap-1'>
-                <div className={`w-3 h-3 rounded-full border-2 transition-all ${
-                  i <= currentStep
+                <div className={`w-3 h-3 rounded-full border-2 transition-all ${i <= currentStep
                     ? 'bg-pink-500 border-pink-500'
                     : 'bg-white border-gray-300'
-                }`} />
+                  }`} />
                 <span className='text-[9px] text-center text-gray-400 w-10 leading-tight hidden sm:block'>
                   {statusLabels[step]}
                 </span>
@@ -191,6 +190,7 @@ const OrderDetail = ({ token }) => {
                 />
                 <div className='flex-1 min-w-0'>
                   <p className='text-sm font-semibold text-gray-800 mb-1'>{item.name}</p>
+                  {item.weight && <p className='text-xs text-gray-600 mb-1'>{item.weight}</p>}
                   <div className='flex items-center justify-between'>
                     <span className='text-xs text-gray-400'>৳{item.price} × {item.quantity}</span>
                     <span className='text-sm font-bold text-pink-600'>৳{subtotal}</span>

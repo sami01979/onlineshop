@@ -24,6 +24,7 @@ const Update = ({ token }) => {
     const [bestseller, setBestseller] = useState(false)
     const [existingImages, setExistingImages] = useState([])
     const [tags, setTags] = useState("")
+    const [weight, setWeight] = useState("")
 
     const fetchProduct = async (resolvedId) => {
         if (!resolvedId) return
@@ -48,6 +49,7 @@ const Update = ({ token }) => {
                 setBestseller(p.bestseller)
                 setExistingImages(p.image || [])
                 setTags(Array.isArray(p.tags) ? p.tags.join(', ') : "")
+                setWeight(p.weight || "")
             } else {
                 toast.error(response.data.message)
             }
@@ -77,6 +79,7 @@ const Update = ({ token }) => {
             formData.append("subCategory", subCategory)
             formData.append("bestseller", bestseller)
             formData.append("tags", tags)
+            formData.append("weight", weight)
 
             image1 && formData.append("image1", image1)
             image2 && formData.append("image2", image2)
@@ -85,24 +88,24 @@ const Update = ({ token }) => {
 
             const response = await axios.post(backendUrl + "/api/product/update", formData, { headers: { token } })
             if (response.data.success) {
-    toast.success(response.data.message)
-    // clear everything
-    setName('')
-    setDescription('')
-    setPrice('')
-    setMprice('')
-    setCategory('none')
-    setSubCategory('none')
-    setBestseller(false)
-    setTags('')
-    setExistingImages([])
-    setImage1(false)
-    setImage2(false)
-    setImage3(false)
-    setImage4(false)
-} else {
-    toast.error(response.data.message)
-}
+                toast.success(response.data.message)
+                setName('')
+                setDescription('')
+                setPrice('')
+                setMprice('')
+                setCategory('none')
+                setSubCategory('none')
+                setBestseller(false)
+                setTags('')
+                setWeight('')
+                setExistingImages([])
+                setImage1(false)
+                setImage2(false)
+                setImage3(false)
+                setImage4(false)
+            } else {
+                toast.error(response.data.message)
+            }
         } catch (error) {
             console.log(error)
             toast.error(error.message)
@@ -153,6 +156,18 @@ const Update = ({ token }) => {
                 <div className='w-full'>
                     <p className='mb-2'>Product Description</p>
                     <textarea onChange={(e) => setDescription(e.target.value)} value={description} className='w-full max-w-125 px-3 py-2' placeholder='Write content here' required />
+                </div>
+
+                {/* Weight input */}
+                <div className='w-full'>
+                    <p className='mb-2'>Weight / Volume <span className='text-gray-400 text-sm'>(e.g. 500g, 1kg, 250ml)</span></p>
+                    <input
+                        onChange={(e) => setWeight(e.target.value)}
+                        value={weight}
+                        className='w-full max-w-125 px-3 py-2'
+                        type="text"
+                        placeholder='500g'
+                    />
                 </div>
 
                 {/* Tags input */}

@@ -18,7 +18,8 @@ const Add = ({token}) => {
     const [category, setCategory] = useState("None") 
     const [subCategory, setSubCategory] = useState("")
     const [bestseller, setBestseller] = useState(false)
-    const [tags, setTags] = useState("")   // NEW
+    const [tags, setTags] = useState("")
+    const [weight, setWeight] = useState("")
 
     const onSubmitHandler = async (e) => {
         e.preventDefault();
@@ -32,7 +33,8 @@ const Add = ({token}) => {
             formData.append("category", category)
             formData.append("subCategory", subCategory)
             formData.append("bestseller", bestseller)
-            formData.append("tags", tags)   // NEW
+            formData.append("tags", tags)
+            formData.append("weight", weight)
 
             image1 && formData.append("image1", image1)
             image2 && formData.append("image2", image2)
@@ -50,7 +52,8 @@ const Add = ({token}) => {
                 setImage4(false)
                 setPrice('')
                 setMprice('')
-                setTags('')   // NEW
+                setTags('')
+                setWeight('')
             } else {
                 toast.error(response.data.message)
             }
@@ -92,7 +95,19 @@ const Add = ({token}) => {
         <textarea onChange={(e) => setDescription(e.target.value)} value={description} className='w-full max-w-125 px-3 py-2' type="text" placeholder='Write content here' required />
     </div>
 
-    {/* NEW — Tags input */}
+    {/* Weight input */}
+    <div className='w-full'>
+        <p className='mb-2'>Weight / Volume <span className='text-gray-400 text-sm'>(e.g. 500g, 1kg, 250ml)</span></p>
+        <input
+            onChange={(e) => setWeight(e.target.value)}
+            value={weight}
+            className='w-full max-w-125 px-3 py-2'
+            type="text"
+            placeholder='500g'
+        />
+    </div>
+
+    {/* Tags input */}
     <div className='w-full'>
         <p className='mb-2'>Tags <span className='text-gray-400 text-sm'>(comma separated, include Bengali)</span></p>
         <input
