@@ -1,10 +1,13 @@
 import orderModel from "../models/orderModel.js"
 import userModel from "../models/userModel.js"
+import mongoose from "mongoose"
+import productModel from "../models/productModel.js"
 import { sendOrderNotification } from '../routes/notificationRoute.js';
-/* placing order using cash on delivery */
+
 const placeOrder = async (req, res) => {
     try {
         const { userId, items, amount, address } = req.body
+        
         const orderData = {
             userId: userId || null,
             items,
@@ -17,7 +20,15 @@ const placeOrder = async (req, res) => {
 
         const newOrder = new orderModel(orderData)
         await newOrder.save()
-        await sendOrderNotification(newOrder); // ✅ fixed
+        await sendOrderNotification(newOrder);
+
+        // increment sells for each product
+for (const item of items) {
+    await productModel.findByIdAndUpdate(
+        new mongoose.Types.ObjectId(item._id), 
+        { $inc: { sells: item.quantity } }
+    )
+}
 
         // only clear cart if user is logged in
         if (userId) {
@@ -30,6 +41,7 @@ const placeOrder = async (req, res) => {
         res.json({ success: false, message: error.message })
     }
 }
+
 const allOrders = async (req, res) => {
     try {
         const orders = await orderModel.find({})
@@ -39,6 +51,7 @@ const allOrders = async (req, res) => {
         res.json({ success: false, message: error.message })
     }
 }
+
 const userOrder = async (req, res) => {
     try {
         const { userId } = req.body;
@@ -49,6 +62,7 @@ const userOrder = async (req, res) => {
         res.json({ success: false, message: error.message })
     }
 }
+
 const updateStatus = async (req, res) => {
     try {
         const { orderId, status } = req.body
