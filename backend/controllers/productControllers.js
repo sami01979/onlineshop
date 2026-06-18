@@ -1,10 +1,10 @@
 import {v2 as cloudinary} from 'cloudinary' 
 import productModel from '../models/productModel.js'
-//function for add product
 
+// function for add product
 const addProduct = async (req, res) => {
     try {
-        const {name, description, price, mprice, category,subCategory,sizes,bestseller} = req.body
+        const {name, description, price, mprice, category, subCategory, bestseller, tags} = req.body
 
         const image1 = req.files.image1 && req.files.image1[0]
         const image2 = req.files.image2 && req.files.image2[0] 
@@ -19,53 +19,81 @@ const addProduct = async (req, res) => {
             })
         )
 
-        const productData= {
+        // parse tags — comes as comma string from form
+        const parsedTags = tags
+            ? tags.split(',').map(t => t.trim()).filter(Boolean)
+            : []
+
+        const productData = {
             name,
             description,
-            price:Number(price),
+            price: Number(price),
             mprice,
             category,
             subCategory,
             bestseller: bestseller === 'true' ? true : false,
             image: imagesUrl,
-            Date:Date.now()
+            tags: parsedTags,
+            Date: Date.now()
         }
-        console.log(productData)
+
+       
 
         const product = new productModel(productData)
         await product.save()
-        res.json({success:true, message:'Product added successfully'})
+        res.json({success: true, message: 'Product added successfully'})
     } catch (error) {
         console.log(error)
-        res.json({success:false,message:error.message})
+        res.json({success: false, message: error.message})
     }
 }
 
-//function for list product
+// function for list product — scored + sorted
 const listProduct = async (req, res) => {
     try {
-         const products = await productModel.find()
-            res.json({success:true, products})
+        const products = await productModel.find()
+
+        const now = Date.now()
+        const sevenDays = 7 * 24 * 60 * 60 * 1000
+
+        const scored = products.map(p => {
+            try {                          // ADD THIS
+                const obj = p.toObject()
+                const age = now - p.Date
+                const recencyBoost = age < sevenDays ? 15 : 0
+                const bestsellerBoost = p.bestseller ? 10 : 0
+                const randomBoost = Math.random() * 5
+                obj.score = (p.sells * 3) + (p.views * 1) + recencyBoost + bestsellerBoost + randomBoost
+                return obj
+            } catch(err) {                 
+                
+                return p.toObject()
+            }
+        })
+
+        scored.sort((a, b) => b.score - a.score)
+        res.json({success: true, products: scored})
     } catch (error) {
-         console.log(error)
-        res.json({success:false,message:error.message})
+        console.log(error)
+        res.json({success: false, message: error.message})
     }
-    
 }
 
-//function for removing product
+// function for removing product
 const removeProduct = async (req, res) => {
     try {
         await productModel.findByIdAndDelete(req.body.id)
-        res.json({success:true, message:'Product removed successfully'})
+        res.json({success: true, message: 'Product removed successfully'})
     } catch (error) {
         console.log(error)
-        res.json({success:false, message:error.message})
+        res.json({success: false, message: error.message})
     }
 }
+
+// function for updating product
 const updateProduct = async (req, res) => {
     try {
-        const { id, name, description, price,mprice, category, subCategory, bestseller, sizes } = req.body
+        const { id, name, description, price, mprice, category, subCategory, bestseller, tags } = req.body
 
         const updateData = {}
 
@@ -75,12 +103,17 @@ const updateProduct = async (req, res) => {
         if (mprice !== undefined && mprice !== '') {
             updateData.mprice = Number(mprice)
         }
-        if (category)    updateData.category     = category
-        if (subCategory) updateData.subCategory  = subCategory
+        if (category)    updateData.category    = category
+        if (subCategory) updateData.subCategory = subCategory
         if (bestseller !== undefined)
-                         updateData.bestseller    = bestseller === 'true' ? true : false
+                         updateData.bestseller  = bestseller === 'true' ? true : false
 
-        // Handle new images if uploaded
+        // parse tags if provided
+        if (tags !== undefined && tags !== '') {
+            updateData.tags = tags.split(',').map(t => t.trim()).filter(Boolean)
+        }
+
+        // handle new images if uploaded
         let imagesUrl = []
         if (req.files) {
             const imageFields = ['image1', 'image2', 'image3', 'image4']
@@ -99,7 +132,7 @@ const updateProduct = async (req, res) => {
         const updated = await productModel.findByIdAndUpdate(
             id,
             { $set: updateData },
-            { new: true }          // returns the updated document
+            { new: true }
         )
 
         if (!updated) {
@@ -112,12 +145,12 @@ const updateProduct = async (req, res) => {
         console.log(error)
         res.json({ success: false, message: error.message })
     }
-} 
+}
 
-//function for single product info
+// function for single product info
 const singleProduct = async (req, res) => {
     try {
-        const { id } = req.body  // ← change productId to id
+        const { id } = req.body
         const product = await productModel.findById(id)
         if (!product) {
             return res.json({ success: false, message: 'Product not found' })
@@ -129,4 +162,16 @@ const singleProduct = async (req, res) => {
     }
 }
 
-export {addProduct, listProduct, removeProduct, singleProduct,updateProduct}
+// NEW — track product page views
+const trackView = async (req, res) => {
+    try {
+        const { id } = req.body
+        await productModel.findByIdAndUpdate(id, { $inc: { views: 1 } })
+        res.json({ success: true })
+    } catch (error) {
+        console.log(error)
+        res.json({ success: false, message: error.message })
+    }
+}
+
+export { addProduct, listProduct, removeProduct, singleProduct, updateProduct, trackView }
