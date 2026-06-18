@@ -28,7 +28,7 @@ const Navbar = () => {
   }, [])
 
   return (
-    <div className='flex items-center justify-between py-2 font-medium'>
+    <div className='flex items-center justify-between  font-medium'>
       <Link to='/'>
         < img src={assets.flogo} className='w-40 sm:w-52' alt="Logo" />
       </Link>

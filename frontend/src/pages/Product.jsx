@@ -10,7 +10,7 @@ const Product = () => {
   const [productData, setProductData] = useState(false);
   const [image, setImage] = useState('');
   /* const [quantity, setQuantity] = useState(1); */
-  const quantity = cartItems[productData?._id] || 1
+  const quantity = cartItems[productData?._id] || 0
 
   const fetchProductData = async () => {
     products.map((item) => {
@@ -77,9 +77,12 @@ const Product = () => {
           </div>
 
           <button
-            onClick={() => { addToCart(productData._id, quantity); toast.success('Item added to cart!', { autoClose: 1000 }); window.scrollTo({ top: 0, behavior: 'smooth' }) }}
+            onClick={() => {
+              toast.success('Item added to cart!', { autoClose: 1000 });
+              window.scrollTo({ top: 0, behavior: 'smooth' });
+            }}
             className='bg-blue-950 text-white px-8 py-3 text-sm active:bg-gray-700'
-          >ADD TO CART</button>
+          >ADDED TO CART</button>
 
           <hr className='mt-8 sm:w-4/5' />
           <div className='text-sm text-gray-500 mt-5 flex flex-col gap-1'>

@@ -8,10 +8,11 @@ const BestSeller = () => {
     const [bestSeller, setBestSeller] = React.useState([])
 
     React.useEffect(() => {
-      
-        const bestProduct = products.filter(item => item.bestseller)
-        setBestSeller(bestProduct)
-    }, [products])
+  const bestProduct = products
+    .filter(item => item.bestseller)
+    .sort((a, b) => (b.sells || 0) - (a.sells || 0))
+  setBestSeller(bestProduct)
+}, [products])
   return (
     <div className='my-2'>
         <div className='text-center text-3xl py-2'>
