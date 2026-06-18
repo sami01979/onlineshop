@@ -33,36 +33,66 @@ const Collection = () => {
     }
    }
 
-   const applyFilter=()=>{
-    let productsCopy = products.slice();
+ const applyFilter = () => {
+ 
+    let productsCopy = products.slice()
 
-    if(showSearch && search){
-      productsCopy = productsCopy.filter(item=>item.name.toLowerCase().includes(search.toLowerCase()))
+    if (showSearch && search) {
+        const q = search.toLowerCase()
+        
+        productsCopy = productsCopy.filter(item => {
+            const inName = item.name.toLowerCase().includes(q)
+            const inCategory = item.category?.toLowerCase().includes(q)
+            const inTags = Array.isArray(item.tags) && 
+                item.tags.some(tag => tag.toLowerCase().includes(q))
+            return inName || inCategory || inTags
+        })
+
+        // sort by relevance — starts with query ranks higher
+        productsCopy.sort((a, b) => {
+            const aName = a.name.toLowerCase()
+            const bName = b.name.toLowerCase()
+
+            const aStarts = aName.startsWith(q) ? 0 : 1
+            const bStarts = bName.startsWith(q) ? 0 : 1
+
+            // also check if any tag starts with query
+            const aTagStarts = Array.isArray(a.tags) && a.tags.some(t => t.toLowerCase().startsWith(q)) ? 0 : 1
+            const bTagStarts = Array.isArray(b.tags) && b.tags.some(t => t.toLowerCase().startsWith(q)) ? 0 : 1
+
+            const aScore = Math.min(aStarts, aTagStarts)
+            const bScore = Math.min(bStarts, bTagStarts)
+
+            return aScore - bScore
+        })
     }
 
-    if(category.length>0){
-      productsCopy=productsCopy.filter(item=>category.includes(item.category))
+    if (category.length > 0) {
+        productsCopy = productsCopy.filter(item => category.includes(item.category))
     }
 
-    if(subCategory.length>0){
-      productsCopy=productsCopy.filter(item=>subCategory.includes(item.subCategory))
+    if (subCategory.length > 0) {
+        productsCopy = productsCopy.filter(item => subCategory.includes(item.subCategory))
     }
+
     setFilterProducts(productsCopy)
-   }
-   const sortProduct =()=>{
-      let fpCopy =filterProducts.slice()
-      switch(sortType){
-        case'low-high':
-        setFilterProducts(fpCopy.sort((a,b)=>(a.price -b.price)))
-        break;
-        case'high-low':
-        setFilterProducts(fpCopy.sort((a,b)=>(b.price -a.price)))
-        break;
+}
+   const sortProduct = () => {
+    let fpCopy = filterProducts.slice()
+    switch (sortType) {
+        case 'low-high':
+            setFilterProducts(fpCopy.sort((a, b) => a.price - b.price))
+            break
+        case 'high-low':
+            setFilterProducts(fpCopy.sort((a, b) => b.price - a.price))
+            break
         default:
-          applyFilter()
-          break;
-      }
-   }
+            // 'relevant' — use score from backend (already sorted on load)
+            // just re-apply filter without changing order
+            applyFilter()
+            break
+    }
+}
    React.useEffect(()=>{
     applyFilter();
    },[category,subCategory,search,showSearch,products])

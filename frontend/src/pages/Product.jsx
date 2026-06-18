@@ -4,12 +4,13 @@ import { ShopContext } from '../context/ShopContext';
 import { assets } from '../assets/frontend_assets/assets';
 import RelatedProducts from '../components/RelatedProducts';
 import { toast } from 'react-toastify';
+import axios from 'axios';
+
 const Product = () => {
   const { productId } = useParams();
-  const { products, currency, addToCart, cartItems, updateQuantity } = useContext(ShopContext);
+  const { products, currency, addToCart, cartItems, updateQuantity, backendUrl } = useContext(ShopContext);
   const [productData, setProductData] = useState(false);
   const [image, setImage] = useState('');
-  /* const [quantity, setQuantity] = useState(1); */
   const quantity = cartItems[productData?._id] || 0
 
   const fetchProductData = async () => {
@@ -25,6 +26,14 @@ const Product = () => {
   useEffect(() => {
     fetchProductData();
   }, [productId, products]);
+
+  // NEW — track view when product page opens
+  useEffect(() => {
+    if (productId) {
+      axios.post(`${backendUrl}/api/product/view`, { id: productId })
+        .catch(err => console.log('View tracking failed:', err))
+    }
+  }, [productId])
 
   return productData ? (
     <div className='border-t-2 pt-10 transition-opacity ease-in duration-500 opacity-100'>
@@ -46,14 +55,7 @@ const Product = () => {
         {/* Product Info */}
         <div className='flex-1'>
           <h1 className='font-medium text-2xl mt-2'>{productData.name}</h1>
-          {/* <div className='flex items-center gap-1 mt-2'>
-            <img src={assets.star_icon} alt="" className="w-3 5" />
-            <img src={assets.star_icon} alt="" className="w-3 5" />
-            <img src={assets.star_icon} alt="" className="w-3 5" />
-            <img src={assets.star_icon} alt="" className="w-3 5" />
-            <img src={assets.star_dull_icon} alt="" className="w-3 5" />
-            <p className='pl-2'>(163)</p>
-          </div> */}
+          
           <div className='flex gap-3'>
             <p className='mt-5 text-3xl font-medium'>{currency}{productData.price}</p>
             <p className='mt-5 line-through text-red-500 text-2xl font-medium'>{currency}{productData.mprice}</p>
@@ -66,7 +68,7 @@ const Product = () => {
             <div className='flex items-center gap-3'>
               <button
                 onClick={() => updateQuantity(productData._id, Math.max(0, quantity - 1))}
-                className='border-2 border-blue-950 rounded-full  w-8 h-8 text-lg flex items-center justify-center bg-gray-100 hover:bg-gray-200'
+                className='border-2 border-blue-950 rounded-full w-8 h-8 text-lg flex items-center justify-center bg-gray-100 hover:bg-gray-200'
               ><span className='text-blue-950'>-</span></button>
               <span className='w-8 text-center text-lg'>{quantity}</span>
               <button
@@ -92,8 +94,6 @@ const Product = () => {
           </div>
         </div>
       </div>
-
-
 
       <RelatedProducts category={productData.category} subCategory={productData.subCategory} />
     </div>
