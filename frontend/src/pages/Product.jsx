@@ -55,11 +55,14 @@ const Product = () => {
         {/* Product Info */}
         <div className='flex-1'>
           <h1 className='font-medium text-2xl mt-2'>{productData.name}</h1>
-          
-          <div className='flex gap-3'>
+
+          <div className='flex gap-3 items-center'>
             <p className='mt-5 text-3xl font-medium'>{currency}{productData.price}</p>
             <p className='mt-5 line-through text-red-500 text-2xl font-medium'>{currency}{productData.mprice}</p>
           </div>
+          {productData.weight && (
+            <p className='text-base text-gray-600 mt-1'>{productData.weight}</p>
+          )}
           <p className='mt-5 text-gray-500 md:w-4/5'>{productData.description}</p>
 
           {/* Quantity Selector */}

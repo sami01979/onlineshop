@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react'
 import { ShopContext } from '../context/ShopContext'
 import { Link } from 'react-router-dom'
 
-const ProductItem = ({ id, image, name, price, mprice }) => {
+const ProductItem = ({ id, image, name, price, mprice, weight }) => {
   const { currency, cartItems, addToCart, updateQuantity } = React.useContext(ShopContext)
   const quantity = cartItems[id] || 0
   const [expanded, setExpanded] = useState(false)
@@ -119,10 +119,12 @@ const ProductItem = ({ id, image, name, price, mprice }) => {
       <p className='pt-2 text-sm leading-tight line-clamp-2 min-h-10'>{name}</p>
 
       {/* Price */}
-      <div className='flex items-center gap-1.5 mt-1'>
-        <p className='text-sm font-bold text-gray-800'>{currency}{price}</p>
-        {mprice && <p className='line-through text-red-400 text-xs'>{currency}{mprice}</p>}
-      </div>
+      {/* Price */}
+<div className='flex items-center gap-1.5 mt-1'>
+  <p className='text-sm font-bold text-gray-800'>{currency}{price}</p>
+  {mprice && <p className='line-through text-red-400 text-xs'>{currency}{mprice}</p>}
+</div>
+{weight && <p className='text-sm text-gray-500 mt-0.5'>{weight}</p>}
     </Link>
   )
 }
