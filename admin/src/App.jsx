@@ -31,17 +31,15 @@ const AppContent = ({ token, setToken }) => {
   try {
     const reg = await navigator.serviceWorker.ready;
 
-    // Unsubscribe existing first to force fresh save to MongoDB
+    // Check if already subscribed
     const existing = await reg.pushManager.getSubscription();
-    if (existing) await existing.unsubscribe();
+    if (existing) return;
 
-    // Subscribe fresh
     const sub = await reg.pushManager.subscribe({
       userVisibleOnly: true,
       applicationServerKey: import.meta.env.VITE_VAPID_PUBLIC_KEY,
     });
 
-    // Send subscription to backend
     await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/notification/subscribe`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
