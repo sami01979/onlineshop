@@ -23,6 +23,7 @@ const Update = ({ token }) => {
     const [subCategory, setSubCategory] = useState("none")
     const [bestseller, setBestseller] = useState(false)
     const [existingImages, setExistingImages] = useState([])
+    const [tags, setTags] = useState("")
 
     const fetchProduct = async (resolvedId) => {
         if (!resolvedId) return
@@ -46,6 +47,7 @@ const Update = ({ token }) => {
                 setSubCategory(p.subCategory)
                 setBestseller(p.bestseller)
                 setExistingImages(p.image || [])
+                setTags(Array.isArray(p.tags) ? p.tags.join(', ') : "")
             } else {
                 toast.error(response.data.message)
             }
@@ -74,6 +76,7 @@ const Update = ({ token }) => {
             formData.append("category", category)
             formData.append("subCategory", subCategory)
             formData.append("bestseller", bestseller)
+            formData.append("tags", tags)
 
             image1 && formData.append("image1", image1)
             image2 && formData.append("image2", image2)
@@ -82,14 +85,24 @@ const Update = ({ token }) => {
 
             const response = await axios.post(backendUrl + "/api/product/update", formData, { headers: { token } })
             if (response.data.success) {
-                toast.success(response.data.message)
-                setImage1(false)
-                setImage2(false)
-                setImage3(false)
-                setImage4(false)
-            } else {
-                toast.error(response.data.message)
-            }
+    toast.success(response.data.message)
+    // clear everything
+    setName('')
+    setDescription('')
+    setPrice('')
+    setMprice('')
+    setCategory('none')
+    setSubCategory('none')
+    setBestseller(false)
+    setTags('')
+    setExistingImages([])
+    setImage1(false)
+    setImage2(false)
+    setImage3(false)
+    setImage4(false)
+} else {
+    toast.error(response.data.message)
+}
         } catch (error) {
             console.log(error)
             toast.error(error.message)
@@ -142,11 +155,23 @@ const Update = ({ token }) => {
                     <textarea onChange={(e) => setDescription(e.target.value)} value={description} className='w-full max-w-125 px-3 py-2' placeholder='Write content here' required />
                 </div>
 
+                {/* Tags input */}
+                <div className='w-full'>
+                    <p className='mb-2'>Tags <span className='text-gray-400 text-sm'>(comma separated, include Bengali)</span></p>
+                    <input
+                        onChange={(e) => setTags(e.target.value)}
+                        value={tags}
+                        className='w-full max-w-125 px-3 py-2'
+                        type="text"
+                        placeholder='tomato, টমেটো, vegetable, সবজি'
+                    />
+                </div>
+
                 <div className='flex flex-col sm:flex-row gap-2 sm:gap-8 w-full'>
                     <div>
                         <p className='mb-2'>Product Category</p>
                         <select onChange={(e) => setCategory(e.target.value)} value={category} className='w-full px-3 py-2'>
-                            <option value="None">None</option>  
+                            <option value="None">None</option>
                             <option value="Cooking">Cooking</option>
                             <option value="Snacks">Snacks</option>
                             <option value="Spices">Spices</option>
@@ -171,10 +196,6 @@ const Update = ({ token }) => {
                         <p className='mb-2'>Product MRP Price</p>
                         <input onChange={(e) => setMprice(e.target.value)} value={mprice} className='w-full px-3 py-2 sm:w-30' type="number" placeholder='MRP price' />
                     </div>
-                </div>
-
-                <div>
-
                 </div>
 
                 <div className='flex gap-2 mt-2'>
