@@ -1,4 +1,4 @@
-import React, { useContext } from 'react'
+import React, { useContext, useEffect } from 'react'
 import { Routes, Route, useLocation, useNavigate } from 'react-router-dom'
 import Home from './pages/Home'
 /* import About from './pages/About' */
@@ -26,6 +26,15 @@ const App = () => {
   const navigate = useNavigate()
 
   const hideBar = location.pathname === '/place-order' || location.pathname === '/login'
+
+  // GA4 page tracking on route change
+  useEffect(() => {
+    if (window.gtag) {
+      window.gtag('config', 'G-8CJZEVJ844', {
+        page_path: location.pathname + location.search,
+      })
+    }
+  }, [location])
 
   return (
     <div className='px-4 sm:px-[5vw] md:px-[7vw] lg:px-[9vw] pb-16 sm:pb-0'>
