@@ -83,9 +83,13 @@ const Product = () => {
 
           <button
             onClick={() => {
-              toast.success('Item added to cart!', { autoClose: 1000 });
-              window.scrollTo({ top: 0, behavior: 'smooth' });
-            }}
+  if (quantity === 0) {
+    toast.error('Please select a quantity!', { autoClose: 1000 });
+    return;
+  }
+  toast.success('Item added to cart!', { autoClose: 1000 });
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}}
             className='bg-blue-950 text-white px-8 py-3 text-sm active:bg-gray-700'
           >ADDED TO CART</button>
 
