@@ -22,15 +22,13 @@ const placeOrder = async (req, res) => {
         await newOrder.save()
         await sendOrderNotification(newOrder);
 
-        // increment sells for each product
-for (const item of items) {
-    await productModel.findByIdAndUpdate(
-        new mongoose.Types.ObjectId(item._id), 
-        { $inc: { sells: item.quantity } }
-    )
-}
+        for (const item of items) {
+            await productModel.findByIdAndUpdate(
+                new mongoose.Types.ObjectId(item._id), 
+                { $inc: { sells: item.quantity } }
+            )
+        }
 
-        // only clear cart if user is logged in
         if (userId) {
             await userModel.findByIdAndUpdate(userId, { cartData: {} })
         }
@@ -74,4 +72,19 @@ const updateStatus = async (req, res) => {
     }
 }
 
-export { placeOrder, allOrders, userOrder, updateStatus }
+// ✅ NEW — delete order
+const deleteOrder = async (req, res) => {
+    try {
+        const { orderId } = req.body
+        const deleted = await orderModel.findByIdAndDelete(orderId)
+        if (!deleted) {
+            return res.json({ success: false, message: 'Order not found' })
+        }
+        res.json({ success: true, message: 'Order deleted' })
+    } catch (error) {
+        console.log(error)
+        res.json({ success: false, message: error.message })
+    }
+}
+
+export { placeOrder, allOrders, userOrder, updateStatus, deleteOrder }

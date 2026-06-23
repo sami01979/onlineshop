@@ -19,7 +19,6 @@ const addProduct = async (req, res) => {
             })
         )
 
-        // parse tags — comes as comma string from form
         const parsedTags = tags
             ? tags.split(',').map(t => t.trim()).filter(Boolean)
             : []
@@ -50,22 +49,22 @@ const addProduct = async (req, res) => {
 // function for list product — scored + sorted
 const listProduct = async (req, res) => {
     try {
-        const products = await productModel.find()
+        const products = await productModel.find().lean()
 
         const now = Date.now()
         const sevenDays = 7 * 24 * 60 * 60 * 1000
 
         const scored = products.map(p => {
             try {
-                const obj = p.toObject()
                 const age = now - p.Date
                 const recencyBoost = age < sevenDays ? 15 : 0
                 const bestsellerBoost = p.bestseller ? 10 : 0
-                const randomBoost = Math.random() * 5
-                obj.score = (p.sells * 3) + (p.views * 1) + recencyBoost + bestsellerBoost + randomBoost
-                return obj
+                const seed = p._id.toString().charCodeAt(0) + new Date().getDate()
+                const randomBoost = seed % 5
+                p.score = (p.sells * 3) + (p.views * 1) + recencyBoost + bestsellerBoost + randomBoost
+                return p
             } catch(err) {                 
-                return p.toObject()
+                return p
             }
         })
 
@@ -74,6 +73,41 @@ const listProduct = async (req, res) => {
     } catch (error) {
         console.log(error)
         res.json({success: false, message: error.message})
+    }
+}
+
+// ✅ NEW — backend search controller
+const searchProduct = async (req, res) => {
+    try {
+        const { query } = req.query
+
+        if (!query || query.trim() === '') {
+            return res.json({ success: true, products: [] })
+        }
+
+        const q = query.trim()
+        const regex = new RegExp(q, 'i') // case-insensitive
+
+        const products = await productModel.find({
+            $or: [
+                { name: regex },
+                { category: regex },
+                { subCategory: regex },
+                { tags: regex }
+            ]
+        }).limit(30).lean()
+
+        // sort — name/tag starts with query comes first
+        products.sort((a, b) => {
+            const aStarts = a.name.toLowerCase().startsWith(q.toLowerCase()) ? 0 : 1
+            const bStarts = b.name.toLowerCase().startsWith(q.toLowerCase()) ? 0 : 1
+            return aStarts - bStarts
+        })
+
+        res.json({ success: true, products })
+    } catch (error) {
+        console.log(error)
+        res.json({ success: false, message: error.message })
     }
 }
 
@@ -108,12 +142,10 @@ const updateProduct = async (req, res) => {
 
         if (weight !== undefined) updateData.weight = weight
 
-        // parse tags if provided
         if (tags !== undefined && tags !== '') {
             updateData.tags = tags.split(',').map(t => t.trim()).filter(Boolean)
         }
 
-        // handle new images if uploaded
         let imagesUrl = []
         if (req.files) {
             const imageFields = ['image1', 'image2', 'image3', 'image4']
@@ -151,18 +183,18 @@ const updateProduct = async (req, res) => {
 const singleProduct = async (req, res) => {
     try {
         const { id } = req.body
-        const product = await productModel.findById(id)
+        const product = await productModel.findById(id).lean()
         if (!product) {
             return res.json({ success: false, message: 'Product not found' })
         }
         res.json({ success: true, product })
     } catch (error) {
         console.log(error)
-        res.json({ success: false, message: error.message })
+        res.json({ success: false, message: error.message})
     }
 }
 
-// NEW — track product page views
+// track product page views
 const trackView = async (req, res) => {
     try {
         const { id } = req.body
@@ -174,4 +206,4 @@ const trackView = async (req, res) => {
     }
 }
 
-export { addProduct, listProduct, removeProduct, singleProduct, updateProduct, trackView }
+export { addProduct, listProduct, removeProduct, singleProduct, updateProduct, trackView, searchProduct }
