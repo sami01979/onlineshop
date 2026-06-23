@@ -14,20 +14,44 @@ const ShopContextProvider = (props) => {
     const [showSearch, setShowSearch] = React.useState(false)
     const [cartItems, setCartItems] = useState({})
     const [products, setProducts] = useState([])
+    // ✅ NEW — holds backend search results
+    const [searchResults, setSearchResults] = useState([])
+    const [searchLoading, setSearchLoading] = useState(false)
     const navigate = useNavigate()
     const [token, setToken] = useState(localStorage.getItem('token') || '')
+
+    // ✅ NEW — fetch search results from backend
+    const fetchSearch = async (query) => {
+        if (!query || query.trim() === '') {
+            setSearchResults([])
+            return
+        }
+        try {
+            setSearchLoading(true)
+            const response = await axios.get(backendUrl + '/api/product/search', {
+                params: { query }
+            })
+            if (response.data.success) {
+                setSearchResults(response.data.products)
+            }
+        } catch (error) {
+            toast.error(error.message)
+        } finally {
+            setSearchLoading(false)
+        }
+    }
 
     const addToCart = async (itemId, quantity) => {
         let cartData = structuredClone(cartItems)
         cartData[itemId] = (cartData[itemId] || 0) + quantity
         setCartItems(cartData)
-         if (token) {
+        if (token) {
             try {
                 await axios.post(backendUrl + '/api/cart/add', {itemId, quantity}, {headers:{token}})
             } catch (error) {
                 toast.error(error.message)
             }
-         }
+        }
     }
 
     const getCartAmount = () => {
@@ -87,7 +111,7 @@ const ShopContextProvider = (props) => {
         }
     }
 
-    const getUserCart = async (token)=>{
+    const getUserCart = async (token) => {
         try {
             const response = await axios.post(backendUrl + '/api/cart/get',{},{headers:{token}})
             if (response.data.success) {
@@ -114,9 +138,11 @@ const ShopContextProvider = (props) => {
         products, currency, delivery_fee,
         search, setSearch,
         showSearch, setShowSearch,
-        cartItems, addToCart,setCartItems,
+        cartItems, addToCart, setCartItems,
         getCartCount, updateQuantity, getCartAmount,
-        navigate, backendUrl, token, setToken, setCartItems
+        navigate, backendUrl, token, setToken,
+        // ✅ NEW — expose search results and fetch function
+        searchResults, searchLoading, fetchSearch
     }
 
     return (

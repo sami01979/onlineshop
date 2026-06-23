@@ -8,7 +8,7 @@ const PAGE_SIZE = 160
 
 const Collection = () => {
 
-   const { products, search, showSearch } = React.useContext(ShopContext)
+   const { products, search, showSearch, searchResults, searchLoading, fetchSearch } = React.useContext(ShopContext)
    const [showFilter, setShowFilter] = React.useState(false)
    const [filterProducts, setFilterProducts] = React.useState([])
    const [category, setCategory] = React.useState([])
@@ -33,29 +33,8 @@ const Collection = () => {
    }
 
    const applyFilter = () => {
-    let productsCopy = products.slice()
-
-    if (showSearch && search) {
-        const q = search.toLowerCase()
-        productsCopy = productsCopy.filter(item => {
-            const inName = item.name.toLowerCase().includes(q)
-            const inCategory = item.category?.toLowerCase().includes(q)
-            const inTags = Array.isArray(item.tags) && 
-                item.tags.some(tag => tag.toLowerCase().includes(q))
-            return inName || inCategory || inTags
-        })
-        productsCopy.sort((a, b) => {
-            const aName = a.name.toLowerCase()
-            const bName = b.name.toLowerCase()
-            const aStarts = aName.startsWith(q) ? 0 : 1
-            const bStarts = bName.startsWith(q) ? 0 : 1
-            const aTagStarts = Array.isArray(a.tags) && a.tags.some(t => t.toLowerCase().startsWith(q)) ? 0 : 1
-            const bTagStarts = Array.isArray(b.tags) && b.tags.some(t => t.toLowerCase().startsWith(q)) ? 0 : 1
-            const aScore = Math.min(aStarts, aTagStarts)
-            const bScore = Math.min(bStarts, bTagStarts)
-            return aScore - bScore
-        })
-    }
+    // ✅ use searchResults from backend when searching, otherwise use all products
+    let productsCopy = (showSearch && search) ? searchResults.slice() : products.slice()
 
     if (category.length > 0) {
         productsCopy = productsCopy.filter(item => category.includes(item.category))
@@ -85,9 +64,16 @@ const Collection = () => {
     setPage(1)
    }
 
+   // ✅ fetch from backend whenever search query changes
+   React.useEffect(() => {
+    if (showSearch && search) {
+        fetchSearch(search)
+    }
+   }, [search, showSearch])
+
    React.useEffect(() => {
     applyFilter()
-   }, [category, subCategory, search, showSearch, products])
+   }, [category, subCategory, searchResults, showSearch, products])
 
    React.useEffect(() => {
     sortProduct()
@@ -109,7 +95,7 @@ const Collection = () => {
           <div className='flex flex-col gap-2 text-sm font-light text-gray-600'>
             <p className='flex gap-2'><input className='w-3' type="checkbox" value={'Cooking'} onChange={toggleCategory} />Cooking</p>
             <p className='flex gap-2'><input className='w-3' type="checkbox" value={'Snacks'} onChange={toggleCategory} />Snacks</p>
-            <p className='flex gap-2'><input className='w-3' type="checkbox" value={'Spieces'} onChange={toggleCategory} />Spices</p>
+            <p className='flex gap-2'><input className='w-3' type="checkbox" value={'Spices'} onChange={toggleCategory} />Spices</p>
             <p className='flex gap-2'><input className='w-3' type="checkbox" value={'Toiletries'} onChange={toggleCategory} />Toiletries</p>
           </div>
         </div>
@@ -136,12 +122,24 @@ const Collection = () => {
           </select>
         </div>
 
+        {/* loading state */}
+        {searchLoading && (
+            <p className='text-center text-gray-400 py-10'>Searching...</p>
+        )}
+
         {/* products grid */}
-        <div className='grid grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 gap-y-6'>
-          {paginated.map((item, index) => (
-            <ProductItem key={index} name={item.name} id={item._id} price={item.price} mprice={item.mprice} image={item.image} weight={item.weight} />
-          ))}
-        </div>
+        {!searchLoading && (
+            <div className='grid grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 gap-y-6'>
+              {paginated.map((item, index) => (
+                <ProductItem key={index} name={item.name} id={item._id} price={item.price} mprice={item.mprice} image={item.image} weight={item.weight} />
+              ))}
+            </div>
+        )}
+
+        {/* no results */}
+        {!searchLoading && showSearch && search && paginated.length === 0 && (
+            <p className='text-center text-gray-400 py-10'>No products found for "{search}"</p>
+        )}
 
         {/* pagination */}
         {totalPages > 1 && (
