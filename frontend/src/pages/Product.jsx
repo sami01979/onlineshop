@@ -37,14 +37,14 @@ const Product = () => {
 
   return productData ? (
     <div className='border-t-2 pt-10 transition-opacity ease-in duration-500 opacity-100'>
-      <div className='flex gap-12 sm:gap-12 flex-col sm:flex-row'>
+      <div className='flex gap-6 sm:gap-12 flex-col sm:flex-row'>
 
         {/* Product Images */}
         <div className='flex-1 flex flex-col-reverse gap-3 sm:flex-row'>
           <div className='flex sm:flex-col overflow-x-auto sm:overflow-y-scroll justify-between sm:justify-normal sm:w-[18.7%] w-full'>
             {productData.image.map((item, index) => (
               <img onClick={() => setImage(item)} src={item} key={index}
-                className='w-[24%] sm:w-full sm:mb-3 shrink-0 cursor-pointer' alt="" />
+                className='w-[24%] sm:w-full sm:mb-2 shrink-0 cursor-pointer' alt="" />
             ))}
           </div>
           <div className='w-full sm:w-[80%]'>
@@ -54,7 +54,7 @@ const Product = () => {
 
         {/* Product Info */}
         <div className='flex-1'>
-          <h1 className='font-medium text-2xl mt-2'>{productData.name}</h1>
+          <h1 className='font-medium text-2xl mt-1'>{productData.name}</h1>
 
           <div className='flex gap-3 items-center'>
             <p className='mt-5 text-3xl font-medium'>{currency}{productData.price}</p>
@@ -66,7 +66,7 @@ const Product = () => {
           <p className='mt-5 text-gray-500 md:w-4/5'>{productData.description}</p>
 
           {/* Quantity Selector */}
-          <div className='flex flex-col gap-4 my-8'>
+          <div className='flex flex-col gap-4 my-4'>
             <p>Quantity</p>
             <div className='flex items-center gap-3'>
               <button
@@ -102,7 +102,7 @@ const Product = () => {
         </div>
       </div>
 
-      <RelatedProducts
+      <RelatedProducts 
   category={productData.category}
   subCategory={productData.subCategory}
   productId={productData._id}

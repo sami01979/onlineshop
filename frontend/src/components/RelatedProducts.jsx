@@ -43,7 +43,7 @@ const RelatedProducts = ({ category, subCategory, productId, tags = [], name = '
   }, [products, productId])
 
   return (
-    <div className='my-24'>
+    <div className='mt-5 mb-5'>
       <div className='text-center text-3xl py-2'>
         <Title text1={'RELATED'} text2={'PRODUCTS'} />
       </div>
