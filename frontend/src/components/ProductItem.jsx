@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { ShopContext } from '../context/ShopContext'
 import { Link } from 'react-router-dom'
+import { optimizeCloudinaryUrl } from '../utils/imageUtils'
 
 const ProductItem = ({ id, image, name, price, mprice, weight }) => {
   const { currency, cartItems, addToCart, updateQuantity } = React.useContext(ShopContext)
@@ -66,10 +67,13 @@ const ProductItem = ({ id, image, name, price, mprice, weight }) => {
       {/* Image */}
       <div className='relative overflow-hidden rounded-lg bg-gray-50'>
         <img
-          className='w-full aspect-square object-cover hover:scale-105 transition ease-in-out duration-300'
-          src={image[0]}
-          alt={name}
-        />
+  className='w-full aspect-square object-cover hover:scale-105 transition ease-in-out duration-300'
+  src={optimizeCloudinaryUrl(image[0], 400)}
+  alt={name}
+  loading='lazy'
+  width='400'
+  height='400'
+/>
 
         {/* Cart Control */}
         {quantity === 0 ? (
