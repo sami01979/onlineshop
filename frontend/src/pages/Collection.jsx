@@ -4,7 +4,7 @@ import { assets } from '../assets/frontend_assets/assets'
 import Title from '../components/Title'
 import ProductItem from '../components/ProductItem'
 
-const PAGE_SIZE = 160
+const PAGE_SIZE = 120
 
 const Collection = () => {
 

@@ -22,8 +22,8 @@ const RelatedProducts = ({ category, subCategory, productId, tags = [], name = '
         pool = pool
           .filter(item => item.category === 'none' && item.subCategory === 'none')
           .map(item => {
-            const tagScore = (item.tags || []).filter(tag => tags.includes(tag)).length * 2
-            const nameScore = getNameWords(item.name).filter(w => currentWords.includes(w)).length * 5
+            const tagScore = (item.tags || []).filter(tag => tags.includes(tag)).length * 4
+            const nameScore = getNameWords(item.name).filter(w => currentWords.includes(w)).length * 2
             return { ...item, score: tagScore + nameScore }
           })
           .filter(item => item.score > 0)

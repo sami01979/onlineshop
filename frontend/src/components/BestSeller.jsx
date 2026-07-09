@@ -3,7 +3,7 @@ import { ShopContext } from '../context/ShopContext'
 import Title from './Title'
 import ProductItem from './ProductItem'
 
-const PAGE_SIZE = 120
+const PAGE_SIZE = 51
 
 const BestSeller = () => {
   const { products } = React.useContext(ShopContext)
