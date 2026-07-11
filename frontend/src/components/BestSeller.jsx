@@ -10,18 +10,7 @@ const BestSeller = () => {
   const [bestSeller, setBestSeller] = React.useState([])
   const [page, setPage] = React.useState(1)
   const sectionRef = React.useRef(null)
-  const isFirstRender = React.useRef(true)
-
-React.useEffect(() => {
-  if (isFirstRender.current) {
-    isFirstRender.current = false
-    return
-  }
-  if (sectionRef.current) {
-    const top = sectionRef.current.getBoundingClientRect().top + window.scrollY - 80
-    window.scrollTo({ top, behavior: 'smooth' })
-  }
-}, [page])
+  const userInitiated = React.useRef(false)
 
   React.useEffect(() => {
     const bestProduct = products
@@ -35,13 +24,16 @@ React.useEffect(() => {
   const paginated = bestSeller.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE)
 
   const goToPage = (newPage) => {
+    userInitiated.current = true
     setPage(newPage)
   }
 
+  // Runs AFTER the DOM has committed the new page's content
   React.useEffect(() => {
-    if (sectionRef.current) {
+    if (userInitiated.current && sectionRef.current) {
       const top = sectionRef.current.getBoundingClientRect().top + window.scrollY - 80
       window.scrollTo({ top, behavior: 'smooth' })
+      userInitiated.current = false
     }
   }, [page])
 
