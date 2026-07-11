@@ -3,9 +3,11 @@ import { ShopContext } from '../context/ShopContext'
 import Title from '../components/Title'
 import { assets } from '../assets/frontend_assets/assets'
 import CartTotal from '../components/CartTotal'
-
+import { CartContext, CartActionsContext } from '../context/CartContext'
 const Cart = () => {
-  const { products, currency, cartItems, updateQuantity, navigate } = useContext(ShopContext)
+  const { products, currency, navigate } = useContext(ShopContext)
+const { cartItems } = useContext(CartContext)
+const { updateQuantity } = useContext(CartActionsContext)
   const [cartData, setCartData] = useState([])
 
   useEffect(() => {

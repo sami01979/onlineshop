@@ -19,9 +19,10 @@ import UserOrderDetail from './pages/UserOrderDetail'
 import Profile from './pages/Profile'
 import ForgotPassword from './pages/ForgotPassword'
 import ResetPassword from './pages/ResetPassword'
+import { CartContext } from './context/CartContext'
 
 const App = () => {
-  const { getCartCount } = useContext(ShopContext)
+  const { getCartCount } = useContext(CartContext)
   const location = useLocation()
   const navigate = useNavigate()
 

@@ -1,11 +1,13 @@
-import React, { useState, useEffect, useRef } from 'react'
+import React, { useState, useEffect, useRef, useContext } from 'react'
 import { ShopContext } from '../context/ShopContext'
+import { CartActionsContext, useCartQuantity } from '../context/CartContext'
 import { Link } from 'react-router-dom'
 import { optimizeCloudinaryUrl } from '../utils/imageUtils'
 
 const ProductItem = ({ id, image, name, price, mprice, weight }) => {
-  const { currency, cartItems, addToCart, updateQuantity } = React.useContext(ShopContext)
-  const quantity = cartItems[id] || 0
+  const { currency } = useContext(ShopContext)
+  const { addToCart, updateQuantity } = useContext(CartActionsContext)
+  const quantity = useCartQuantity(id)   // only re-renders THIS card when ITS quantity changes
   const [expanded, setExpanded] = useState(false)
   const timerRef = useRef(null)
 

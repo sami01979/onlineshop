@@ -1,6 +1,7 @@
 import React, { useContext, useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { ShopContext } from '../context/ShopContext';
+import { CartContext, CartActionsContext, useCartQuantity } from '../context/CartContext'
 import { assets } from '../assets/frontend_assets/assets';
 import RelatedProducts from '../components/RelatedProducts';
 import { toast } from 'react-toastify';
@@ -9,10 +10,11 @@ import { optimizeCloudinaryUrl } from '../utils/imageUtils';
 
 const Product = () => {
   const { productId } = useParams();
-  const { products, currency, addToCart, cartItems, updateQuantity, backendUrl } = useContext(ShopContext);
+ const { products, currency, backendUrl } = useContext(ShopContext);
+const { addToCart, updateQuantity } = useContext(CartActionsContext);
   const [productData, setProductData] = useState(false);
   const [image, setImage] = useState('');
-  const quantity = cartItems[productData?._id] || 0
+  const quantity = useCartQuantity(productData?._id)
 
   const fetchProductData = async () => {
     products.map((item) => {

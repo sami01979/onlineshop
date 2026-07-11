@@ -1,13 +1,16 @@
 import React, { useContext, useRef, useEffect } from 'react' // CHANGED: added useRef, useEffect
 import { assets } from '../assets/frontend_assets/assets'
 import { Link, NavLink } from 'react-router-dom'
+import { CartContext, CartActionsContext } from '../context/CartContext'
 import { ShopContext } from '../context/ShopContext'
 const Navbar = () => {
   const [visible, setVisible] = React.useState(false)
   const [dropdownOpen, setDropdownOpen] = React.useState(false) // CHANGED: added dropdown state
   const dropdownRef = useRef(null) // CHANGED: added ref for outside click detection
 
-  const { setShowSearch, getCartCount, navigate, token, setToken, setCartItems } = useContext(ShopContext)
+  const { setShowSearch, navigate, token, setToken } = useContext(ShopContext)
+const { getCartCount } = useContext(CartContext)
+const { setCartItems } = useContext(CartActionsContext)
 
   const logout = () => {
     navigate('/login')

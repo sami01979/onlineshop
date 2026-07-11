@@ -5,10 +5,13 @@ import { assets } from '../assets/frontend_assets/assets'
 import { ShopContext } from '../context/ShopContext'
 import { toast } from 'react-toastify'
 import axios from 'axios'
+import { CartContext, CartActionsContext } from '../context/CartContext'
 
 const PlaceOrder = () => {
   const [method, setMethod] = useState('cod')
-  const { navigate, backendUrl, token, cartItems, setCartItems, getCartAmount, delivery_fee, products } = useContext(ShopContext)
+ const { navigate, backendUrl, token, delivery_fee, products } = useContext(ShopContext)
+const { cartItems, getCartAmount } = useContext(CartContext)
+const { setCartItems } = useContext(CartActionsContext)
 
   const [formData, setFormData] = useState({
     firstName: '',
