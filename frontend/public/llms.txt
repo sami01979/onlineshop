@@ -1,0 +1,18 @@
+# Anaibo
+
+> Anaibo is a hyperlocal online grocery delivery service based in Chattogram, Bangladesh, offering 1500+ products with Cash on Delivery within a 2-mile radius.
+
+Anaibo lets customers browse and order everyday grocery items — fresh produce, packaged goods, household essentials, and more — for fast local delivery from a family-run store.
+
+## Pages
+
+- [Home](https://anaibo.com/): Featured products, best sellers, and store highlights.
+- [All Items](https://anaibo.com/collection): Full product catalog with search and filtering.
+- [Cart](https://anaibo.com/cart): Customer shopping cart.
+- [Orders](https://anaibo.com/orders): Order history and tracking.
+- [Contact](https://anaibo.com/contact): Contact information and support.
+
+## Notes
+
+- Delivery is limited to a 2-mile radius around the store location in Chattogram, Bangladesh.
+- Payment is Cash on Delivery only.

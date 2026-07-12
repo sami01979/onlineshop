@@ -82,7 +82,7 @@ const ProductItem = ({ id, image, name, price, mprice, weight }) => {
           // + button
           <button
             onClick={handleAdd}
-            className='absolute bottom-2 right-2 w-7 h-7 bg-white border-2 border-blue-950 text-blue-950 rounded-full flex items-center justify-center text-lg font-bold shadow hover:bg-pink-500 hover:text-white transition-all'
+            className='absolute bottom-2 right-2 w-7 h-7 bg-white border-2 border-blue-950 text-blue-950 rounded-full flex items-center justify-center text-lg font-bold shadow hover:bg-blue-900 hover:text-white transition-all'
           >
             +
           </button>
@@ -127,8 +127,8 @@ const ProductItem = ({ id, image, name, price, mprice, weight }) => {
       {/* Price */}
       {/* Price */}
 <div className='flex items-center gap-1.5 mt-1'>
-  <p className='text-sm font-bold text-gray-800'>{currency}{price}</p>
-  {mprice && <p className='line-through text-red-400 text-xs'>{currency}{mprice}</p>}
+  <p className='text-base font-bold text-gray-800'>{currency}{price}</p>
+  {mprice && <p className='line-through text-red-500 text-sm'>{currency}{mprice}</p>}
 </div>
 {weight && <p className='text-sm text-gray-500 mt-0.5'>{weight}</p>}
     </Link>

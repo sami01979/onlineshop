@@ -6,7 +6,13 @@ const Footer = () => {
     <div>
       <div className='flex flex-col sm:grid grid-cols-[3fr_1fr] gap-14 my-4 mt-2 text-sm'>
         <div className='mb#'> 
-          <img src={assets.flogo} className='w-36 sm:w-40 mb-2' alt="" />
+          <img
+            src={assets.flogo}
+            className='w-36 sm:w-40 h-auto mb-2'
+            alt=""
+            width="180"
+            height="45"
+          />
           <p className='w-full md:w-2/3 text-gray-600'>Anaibo — your everyday online grocery store. Fresh products, great prices, delivered to your door.</p>
         </div>
         <div>

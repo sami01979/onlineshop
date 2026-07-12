@@ -1,4 +1,4 @@
-import flogo from './anaibo.png'
+import flogo from './anaibo.jpg'
 import first_banner from './firstbanner.webp'
 import second_banner from './secondbanner.webp'
 
