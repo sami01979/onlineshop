@@ -4,7 +4,7 @@ import productModel from '../models/productModel.js'
 // function for add product
 const addProduct = async (req, res) => {
     try {
-        const {name, description, price, mprice, category, subCategory, bestseller, tags, weight} = req.body
+        const {name, description, price, mprice, category, subCategory, bestseller, offer, tags, weight} = req.body
 
         const image1 = req.files.image1 && req.files.image1[0]
         const image2 = req.files.image2 && req.files.image2[0] 
@@ -31,6 +31,7 @@ const addProduct = async (req, res) => {
             category,
             subCategory,
             bestseller: bestseller === 'true' ? true : false,
+            offer: offer === 'true' ? true : false,
             image: imagesUrl,
             tags: parsedTags,
             weight: weight || "",
@@ -125,7 +126,7 @@ const removeProduct = async (req, res) => {
 // function for updating product
 const updateProduct = async (req, res) => {
     try {
-        const { id, name, description, price, mprice, category, subCategory, bestseller, tags, weight } = req.body
+        const { id, name, description, price, mprice, category, subCategory, bestseller, offer, tags, weight } = req.body
 
         const updateData = {}
 
@@ -139,6 +140,9 @@ const updateProduct = async (req, res) => {
         if (subCategory) updateData.subCategory = subCategory
         if (bestseller !== undefined)
                          updateData.bestseller  = bestseller === 'true' ? true : false
+
+        if (offer !== undefined)
+                         updateData.offer       = offer === 'true' ? true : false
 
         if (weight !== undefined) updateData.weight = weight
 
