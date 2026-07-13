@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { Routes, Route, useLocation, useNavigate } from 'react-router-dom'
 import Home from './pages/Home'
 /* import About from './pages/About' */
@@ -7,6 +7,7 @@ import Login from './pages/Login'
 import Orders from './pages/Orders'
 import Product from './pages/Product'
 import Collection from './pages/Collection'
+import Offers from './pages/Offers'
 import PlaceOrder from './pages/PlaceOrder'
 import Contact from './pages/Contact'
 import Navbar from './components/Navbar'
@@ -25,8 +26,10 @@ const App = () => {
   const { getCartCount } = useContext(CartContext)
   const location = useLocation()
   const navigate = useNavigate()
+  const [scrolled, setScrolled] = useState(false)
 
   const hideBar = location.pathname === '/place-order' || location.pathname === '/login'
+  const isHome = location.pathname === '/'
 
   // GA4 page tracking on route change
   useEffect(() => {
@@ -37,10 +40,33 @@ const App = () => {
     }
   }, [location])
 
+  // Track scroll position for sticky navbar transparency (mobile home page)
+  useEffect(() => {
+    if (!isHome) return
+
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 10)
+    }
+
+    window.addEventListener('scroll', handleScroll)
+    handleScroll() // set initial state on mount
+    return () => window.removeEventListener('scroll', handleScroll)
+  }, [isHome])
+
   return (
     <div className='px-4 sm:px-[5vw] md:px-[7vw] lg:px-[9vw] pb-16 sm:pb-0'>
       <ToastContainer />
-      <Navbar />
+      <div
+        className={
+          isHome
+            ? `sticky top-0 z-40 sm:static sm:top-auto sm:z-auto transition-colors duration-300 ${
+                scrolled ? 'bg-white/80 backdrop-blur-sm' : 'bg-white'
+              }`
+            : ''
+        }
+      >
+        <Navbar />
+      </div>
       <SearchBar />
       <Routes>
         <Route path="/" element={<Home />} />
@@ -50,6 +76,7 @@ const App = () => {
         <Route path="/orders" element={<Orders />} />
         <Route path="/product/:productId" element={<Product />} />
         <Route path="/collection" element={<Collection />} />
+        <Route path="/offers" element={<Offers />} />
         <Route path="/place-order" element={<PlaceOrder />} />
         <Route path="/contact" element={<Contact />} />
         <Route path="/profile" element={<Profile />} />
