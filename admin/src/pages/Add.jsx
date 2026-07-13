@@ -18,6 +18,7 @@ const Add = ({token}) => {
     const [category, setCategory] = useState("None") 
     const [subCategory, setSubCategory] = useState("")
     const [bestseller, setBestseller] = useState(false)
+    const [offer, setOffer] = useState(false)
     const [tags, setTags] = useState("")
     const [weight, setWeight] = useState("")
 
@@ -33,6 +34,7 @@ const Add = ({token}) => {
             formData.append("category", category)
             formData.append("subCategory", subCategory)
             formData.append("bestseller", bestseller)
+            formData.append("offer", offer)
             formData.append("tags", tags)
             formData.append("weight", weight)
 
@@ -54,6 +56,8 @@ const Add = ({token}) => {
                 setMprice('')
                 setTags('')
                 setWeight('')
+                setBestseller(false)
+                setOffer(false)
             } else {
                 toast.error(response.data.message)
             }
@@ -152,6 +156,10 @@ const Add = ({token}) => {
     <div className='flex gap-2 mt-2'>
         <input onChange={() => setBestseller(prev => !prev)} checked={bestseller} type="checkbox" id='bestseller' />
         <label htmlFor="bestseller">Add to bestseller</label>
+    </div>
+    <div className='flex gap-2'>
+        <input onChange={() => setOffer(prev => !prev)} checked={offer} type="checkbox" id='offer' />
+        <label htmlFor="offer">Add to offers</label>
     </div>
     <button type='submit' className='w-28 py-3 mt-4 bg-black text-white cursor-pointer'>ADD</button>
    </form>

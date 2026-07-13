@@ -22,6 +22,7 @@ const Update = ({ token }) => {
     const [category, setCategory] = useState("none")
     const [subCategory, setSubCategory] = useState("none")
     const [bestseller, setBestseller] = useState(false)
+    const [offer, setOffer] = useState(false)
     const [existingImages, setExistingImages] = useState([])
     const [tags, setTags] = useState("")
     const [weight, setWeight] = useState("")
@@ -47,6 +48,7 @@ const Update = ({ token }) => {
                 setCategory(p.category)
                 setSubCategory(p.subCategory)
                 setBestseller(p.bestseller)
+                setOffer(p.offer)
                 setExistingImages(p.image || [])
                 setTags(Array.isArray(p.tags) ? p.tags.join(', ') : "")
                 setWeight(p.weight || "")
@@ -78,6 +80,7 @@ const Update = ({ token }) => {
             formData.append("category", category)
             formData.append("subCategory", subCategory)
             formData.append("bestseller", bestseller)
+            formData.append("offer", offer)
             formData.append("tags", tags)
             formData.append("weight", weight)
 
@@ -96,6 +99,7 @@ const Update = ({ token }) => {
                 setCategory('none')
                 setSubCategory('none')
                 setBestseller(false)
+                setOffer(false)
                 setTags('')
                 setWeight('')
                 setExistingImages([])
@@ -216,6 +220,11 @@ const Update = ({ token }) => {
                 <div className='flex gap-2 mt-2'>
                     <input onChange={() => setBestseller(prev => !prev)} checked={bestseller} type="checkbox" id='bestseller' />
                     <label htmlFor="bestseller">Add to bestseller</label>
+                </div>
+
+                <div className='flex gap-2'>
+                    <input onChange={() => setOffer(prev => !prev)} checked={offer} type="checkbox" id='offer' />
+                    <label htmlFor="offer">Add to offers</label>
                 </div>
 
                 <button type='submit' className='w-28 py-3 mt-4 bg-black text-white'>UPDATE</button>
