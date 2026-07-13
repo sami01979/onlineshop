@@ -29,7 +29,6 @@ const App = () => {
   const [scrolled, setScrolled] = useState(false)
 
   const hideBar = location.pathname === '/place-order' || location.pathname === '/login'
-  const isHome = location.pathname === '/'
 
   // GA4 page tracking on route change
   useEffect(() => {
@@ -40,10 +39,8 @@ const App = () => {
     }
   }, [location])
 
-  // Track scroll position for sticky navbar transparency (mobile home page)
+  // Track scroll position for sticky navbar transparency + shrink (all pages)
   useEffect(() => {
-    if (!isHome) return
-
     const handleScroll = () => {
       setScrolled(window.scrollY > 10)
     }
@@ -51,21 +48,17 @@ const App = () => {
     window.addEventListener('scroll', handleScroll)
     handleScroll() // set initial state on mount
     return () => window.removeEventListener('scroll', handleScroll)
-  }, [isHome])
+  }, [location.pathname])
 
   return (
     <div className='px-4 sm:px-[5vw] md:px-[7vw] lg:px-[9vw] pb-16 sm:pb-0'>
       <ToastContainer />
       <div
-        className={
-          isHome
-            ? `sticky top-0 z-40 sm:static sm:top-auto sm:z-auto transition-colors duration-300 ${
-                scrolled ? 'bg-white/80 backdrop-blur-sm' : 'bg-white'
-              }`
-            : ''
-        }
+        className={`sticky top-0 z-40 sm:static sm:top-auto sm:z-auto transition-colors duration-300 ${
+          scrolled ? 'bg-white/80 backdrop-blur-sm' : 'bg-white'
+        }`}
       >
-        <Navbar />
+        <Navbar scrolled={scrolled} />
       </div>
       <SearchBar />
       <Routes>

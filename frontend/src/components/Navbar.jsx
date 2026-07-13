@@ -1,9 +1,11 @@
 import React, { useContext, useRef, useEffect } from 'react'
+import { createPortal } from 'react-dom'
 import { assets } from '../assets/frontend_assets/assets'
 import { Link, NavLink } from 'react-router-dom'
 import { CartContext, CartActionsContext } from '../context/CartContext'
 import { ShopContext } from '../context/ShopContext'
-const Navbar = () => {
+
+const Navbar = ({ scrolled }) => {
   const [visible, setVisible] = React.useState(false)
   const [dropdownOpen, setDropdownOpen] = React.useState(false)
   const dropdownRef = useRef(null)
@@ -30,11 +32,11 @@ const Navbar = () => {
   }, [])
 
   return (
-    <div className='flex items-center justify-between  font-medium'>
+    <div className={`flex items-center justify-between font-medium transition-all duration-300 ${scrolled ? 'py-1 sm:py-0' : 'py-3 sm:py-0'}`}>
       <Link to='/'>
         <img
           src={assets.flogo}
-          className='w-40 sm:w-52 h-auto'
+          className={`h-auto transition-all duration-300 ${scrolled ? 'w-28 sm:w-52' : 'w-40 sm:w-52'}`}
           alt="Logo"
           width="208"
           height="52"
@@ -129,19 +131,23 @@ const Navbar = () => {
           height="20"
         />
       </div>
-      {/*sidebar for Mobile Menu */}
-      <div className={`fixed top-0 left-0 w-full h-full bg-white z-50 transition-all overflow-hidden ${visible ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'}`}>
-        <div className='flex flex-col text-gray-500'>
-          <div onClick={() => setVisible(false)} className='flex items-center gap-4 p-3 cursor-pointer'>
-            <img className='h-4 w-4 rotate-180' src={assets.dropdown_icon} alt="" width="16" height="16" />
-            <p>Back</p>
+
+      {/* sidebar for Mobile Menu — rendered via portal to escape backdrop-blur containing block */}
+      {createPortal(
+        <div className={`fixed top-0 left-0 w-full h-full bg-white z-999 transition-all overflow-hidden ${visible ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'}`}>
+          <div className='flex flex-col text-gray-500'>
+            <div onClick={() => setVisible(false)} className='flex items-center gap-4 p-3 cursor-pointer'>
+              <img className='h-4 w-4 rotate-180' src={assets.dropdown_icon} alt="" width="16" height="16" />
+              <p>Back</p>
+            </div>
+            <NavLink onClick={() => setVisible(false)} className='py-2 pl-6 border' to='/'>HOME</NavLink>
+            <NavLink onClick={() => setVisible(false)} className='py-2 pl-6 border' to='/collection'>ALL ITEMS</NavLink>
+            <NavLink onClick={() => setVisible(false)} className='py-2 pl-6 border' to='/offers'>OFFERS</NavLink>
+            <NavLink onClick={() => setVisible(false)} className='py-2 pl-6 border' to='/contact'>CONTACT</NavLink>
           </div>
-          <NavLink onClick={() => setVisible(false)} className='py-2 pl-6 border' to='/'>HOME</NavLink>
-          <NavLink onClick={() => setVisible(false)} className='py-2 pl-6 border' to='/collection'>ALL ITEMS</NavLink>
-          <NavLink onClick={() => setVisible(false)} className='py-2 pl-6 border' to='/offers'>OFFERS</NavLink>
-          <NavLink onClick={() => setVisible(false)} className='py-2 pl-6 border' to='/contact'>CONTACT</NavLink>
-        </div>
-      </div>
+        </div>,
+        document.body
+      )}
     </div>
   )
 }
