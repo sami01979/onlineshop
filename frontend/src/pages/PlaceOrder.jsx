@@ -39,12 +39,25 @@ const { setCartItems } = useContext(CartActionsContext)
 
   const onChangeHandler = (event) => {
     const name = event.target.name
-    const value = event.target.value
+    let value = event.target.value
+
+    if (name === 'mobileNumber') {
+      value = value.replace(/\D/g, '').slice(0, 11)
+    }
+
     setFormData(data => ({ ...data, [name]: value }))
   }
 
+  const isValidMobile = (number) => /^01[0-9]{9}$/.test(number)
+
   const onSubmitHandler = async (event) => {
     event.preventDefault()
+
+    if (!isValidMobile(formData.mobileNumber)) {
+      toast.error('Mobile number must start with 01 and contain 11 digits')
+      return
+    }
+
     try {
       let orderItems = []
       for (const itemId in cartItems) {
@@ -97,7 +110,19 @@ const { setCartItems } = useContext(CartActionsContext)
           <input required onChange={onChangeHandler} name='firstName' value={formData.firstName} className='border border-gray-500 rounded py-1.5 px-3.5 w-full' type="text" placeholder='First Name' />
           <input required onChange={onChangeHandler} name='lastName' value={formData.lastName} className='border border-gray-500 rounded py-1.5 px-3.5 w-full' type="text" placeholder='Last Name' />
         </div>
-        <input required onChange={onChangeHandler} name='mobileNumber' value={formData.mobileNumber} className='border border-gray-500 rounded py-1.5 px-3.5 w-full' type="number" placeholder='Mobile Number' />
+        <input
+          required
+          onChange={onChangeHandler}
+          name='mobileNumber'
+          value={formData.mobileNumber}
+          className='border border-gray-500 rounded py-1.5 px-3.5 w-full'
+          type="tel"
+          inputMode="numeric"
+          maxLength={11}
+          pattern="01[0-9]{9}"
+          title="Mobile number must start with 01 and be 11 digits"
+          placeholder='e.g. 01XXXXXXXXX'
+        />
         <input required onChange={onChangeHandler} name='areaName' value={formData.areaName} className='border border-gray-500 rounded py-1.5 px-3.5 w-full' type="text" placeholder='Area Name' />
         <div className='flex gap-3'>
           <input required onChange={onChangeHandler} name='buildingName' value={formData.buildingName} className='border border-gray-500 rounded py-1.5 px-3.5 w-full' type="text" placeholder='Building Name' />

@@ -36,7 +36,7 @@ const Navbar = ({ scrolled }) => {
       <Link to='/'>
         <img
           src={assets.flogo}
-          className={`h-auto transition-all duration-300 ${scrolled ? 'w-28 sm:w-52' : 'w-40 sm:w-52'}`}
+          className={`h-auto rounded-md transition-all duration-300 ${scrolled ? 'w-28 sm:w-52' : 'w-40 sm:w-52'}`}
           alt="Logo"
           width="208"
           height="52"
@@ -63,16 +63,26 @@ const Navbar = ({ scrolled }) => {
         </NavLink>
       </ul>
       <div className='flex items-center gap-6'>
-        <Link to={'/collection'}>
-          <img
-            onClick={() => setShowSearch(true)}
-            src={assets.search_icon}
-            className='w-5 h-5 cursor-pointer'
-            alt="Search"
-            width="20"
-            height="20"
-          />
-        </Link>
+        <button
+  type="button"
+  onClick={() => {
+    setShowSearch(true)
+    navigate('/collection')
+    window.scrollTo({ top: 0, behavior: 'smooth' })
+    setTimeout(() => {
+      document.getElementById('anaibo-search-input')?.focus()
+    }, 100)
+  }}
+  className='relative z-10 p-1 -m-1'
+>
+  <img
+    src={assets.search_icon}
+    className='w-5 h-5 cursor-pointer pointer-events-none'
+    alt="Search"
+    width="20"
+    height="20"
+  />
+</button>
 
         <div className='relative' ref={dropdownRef}>
           <img
