@@ -1,6 +1,4 @@
 import flogo from './anaibo.jpg'
-import first_banner from './firstbanner.webp'
-import second_banner from './secondbanner.webp'
 
 import logo from './logo.png'
 import hero_img from './hero_img.png'
@@ -40,7 +38,5 @@ export const assets = {
     contact_img,
     razorpay_logo,
     stripe_logo,
-    cross_icon,
-    first_banner,
-    second_banner
+    cross_icon
 }
