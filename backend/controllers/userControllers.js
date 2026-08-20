@@ -149,6 +149,7 @@ const resetPassword = async (req, res) => {
         await user.save()
 
         res.json({ success: true, message: 'Password reset successful' })
+        console.log("password reset successfully")
     } catch (error) {
         console.log(error)
         res.json({ success: false, message: error.message })
